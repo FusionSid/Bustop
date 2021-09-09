@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search</title>
+  <body>
+    
+    <h1>Bustop Cheat Sheet lmao</h1>
+    <h4>Goal: Beat jane</h4>
+    <h3>Search Page</h3>
+
+    <form action="#" method="POST">
+      <label for="letter">Letter:</label><br>
+      <input type="text" name="letter"><br>
+      <label for="cat">Category:</label><br>
+      <input type="text" name="cat"><br>
+      <input type="submit" value="submit">
+    </form><br>
+
+    {%for item in ans%}
+    <p>{{"".join(item)+""}}</p>
+    {%endfor%}
+    
+  </body>
+</html>
