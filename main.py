@@ -6,7 +6,6 @@ import random
 # Flask
 app = Flask("Bustop")
 
-
 # UI Stuff
 @app.route('/')
 def home():
@@ -19,9 +18,10 @@ def insert():
     conn = sqlite3.connect('Bustop.db')
     c = conn.cursor()
     if request.method == "POST":
-        letter = request.form['letter']
         cat = request.form['cat']
         thing = request.form['thing']
+        letter = thing[0].lower()
+        print(letter)
         def insert(table, column, thing):
             with conn:
                 c.execute("INSERT INTO {} ({}) VALUES (:thing)".format(table, column), {'thing':thing})
@@ -44,20 +44,12 @@ def search():
         
         def get_thing(letter, thing):
             c.execute("SELECT {} FROM {}".format(thing, letter))
-            ans = c.fetchall()
-            for item in ans:
-                if item == (None,):
-                    ans.remove(item)
-            for item in ans:
-                if item == (None,):
-                    ans.remove(item)
-            try:
-                for item in ans:
-                    if item == null or [null] or 'null':
-                        ans.remove(item)
-            except:
-                print("f")
-            
+            anslist = c.fetchall()
+            ans = []
+            for item in anslist:
+                if item != None:
+                    ans.append(item)
+            print(ans)
             return ans
 
         ans = get_thing(letter, cat)
@@ -80,8 +72,9 @@ def bustop():
             for item in cats:
                 c.execute("SELECT {} FROM {}".format(item, letter))
                 res = c.fetchall()
-                ans.append(item)
+                ans.append(item[0])
                 ans.append(res)
+                print(ans)
             a = ans
             ans = []
             for item in a:
@@ -106,7 +99,9 @@ def bustop():
     else:
         return render_template('bustop.html')
 
+
 # API:
+# Fail
 
 # Get all
 @app.route('/api/letter=<letter>/')
@@ -118,7 +113,11 @@ def apisearchall(letter):
 
     def get_all(letter):
         c.execute("SELECT * FROM {}".format(letter))
-        ans = c.fetchall()     
+        ans = c.fetchall()
+        for i in ans:
+            for item in i:
+                if i == None:
+                    ans.remove(item)
         return ans
 
     ans = get_all(l)
@@ -144,13 +143,6 @@ def apisearch(letter, thing):
         for item in ans:
             if item == (None,):
                 ans.remove(item)
-        try:
-            for item in ans:
-                if item == null or [null] or 'null':
-                    ans.remove(item)
-        except:
-            print("f")
-        
         return ans
 
     ans = get_thing(l, t)
